@@ -1,7 +1,5 @@
 import numpy as np
-import pandas as pd
 from pathlib import Path
-import scipy.stats as stats
 import matplotlib.pyplot as plt
 from .utils import load_yaml, load_macro_data, box_plot_scenarios
 
@@ -40,9 +38,6 @@ params = load_yaml(params_path)
 steps = params['simulation']['steps']
 num_years = params['simulation']['years']
 start = params['simulation']['start']*steps
-end = (start + params['simulation']['years'])*steps
-middle = int((end + start)/2)
-years = np.linspace(0, num_years, num_years*steps)
 
 ### paths to data ###
 # get database_path from parameters

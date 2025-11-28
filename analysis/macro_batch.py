@@ -44,8 +44,6 @@ params = load_yaml(params_path)
 steps = params['simulation']['steps']
 num_years = params['simulation']['years']
 start = params['simulation']['start']*steps
-end = (start + params['simulation']['years'])*steps
-middle = int((end + start)/2)
 years = np.linspace(0, num_years, num_years*steps)
 
 ### paths to data ###
