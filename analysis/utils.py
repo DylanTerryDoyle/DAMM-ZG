@@ -102,6 +102,42 @@ def load_macro_data(path: Path | str, params: dict, steps: int, start: int):
     con.close()
     return data
 
+def box_plot_scenarios(
+    plot_data: dict[str,pd.DataFrame], 
+    variable: str,
+    figsize: tuple[float,float] | None = None,
+    fontsize: int | None = None,
+    xlabels: list[str] | None = None, 
+    xticks: list[int] | None = None, 
+    yticks: list[float] | None = None,
+    ylim: tuple[float, float] | None = None,
+    colours: list[str] | None = None,
+    figure_path: Path | str | None = None
+    ):
+    
+    ### create plot data ###
+    # copy plot data
+    plot_data = plot_data.copy()
+    # get all values across scenarios for variable
+    for scenario in plot_data.keys():
+        plot_data[scenario] = plot_data[scenario][variable].to_numpy().ravel()
+    
+    ### box plot ###
+    plt.figure(figsize=figsize)
+    bplot = plt.boxplot(plot_data.values(), patch_artist=True, showfliers=False, medianprops=dict(color='black', linewidth=2), whis=(2.5, 97.5))
+    
+    ### set box colour ###
+    if colours:
+        for patch, color in zip(bplot['boxes'], colours):
+            patch.set_facecolor(color)
+            patch.set_alpha(0.5)
+            
+    ### figure settings ###
+    plt.yticks(yticks, fontsize=fontsize)
+    plt.ylim(ylim)
+    plt.xticks(xticks, xlabels, fontsize=fontsize)
+    plt.savefig(figure_path / f"box_plot_{variable}", bbox_inches='tight')
+
 def logscale_ticks(low: float, high: float, num: int) -> np.ndarray:
     """
     Get ticks for either x or y axis from data, rounded to first digit spaced by num in log 10.
